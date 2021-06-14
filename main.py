@@ -1,9 +1,27 @@
-class field:
+import pygame
+from pygame.locals import *
+import time
+
+
+
+class Field:
 	def __init__(self, width: int, height: int, filled_spaces: list = []):
 		self.width = width
 		self.height = height
 		self.filled_spaces = filled_spaces
 		self.layout = []
+
+
+	def get_layout(self):
+		return list(self.layout)
+
+
+	def get_width(self):
+		return int(self.width)
+
+
+	def get_height(self):
+		return int(self.height)
 
 
 	def create_layout(self):
@@ -14,7 +32,7 @@ class field:
 				self.layout.append(0)
 
 
-	def next_state(self):
+	def next(self):
 		new_layout = []
 
 		for index, space in enumerate(self.layout):
@@ -92,7 +110,6 @@ class field:
 			
 
 
-
 	def __repr__(self):
 		new_width = self.width
 		old_width =	0
@@ -110,11 +127,40 @@ class field:
 		return table
 
 
+def main(game_field:Field) -> None:
+	screen = pygame.display.set_mode((game_field.get_height()*10,game_field.get_width()*10))
+
+
+	while True:
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				return
+		x = 0
+		y = 0
+
+
+		for space in game_field.get_layout():
+			if space:
+				pygame.draw.rect(screen, (255,255,255), Rect(x, y, 10, 10))
+		
+			x += 10
+			if x > game_field.get_width()*10-10:
+				y += 10
+				x = 0
+
+		pygame.display.flip()
+		game_field.next()
+		time.sleep(0.1)
+		screen.fill((0,0,0))
+
+
 
 if __name__ == "__main__":
-	a = field(4,4, [2,6,10])
+	pygame.init()
+	pygame.display.set_caption("Conway's Game of Life")
+
+	a = Field(100,100, [2,100,102,201,202,7980,7981,7982, 702.800,802,901,902])
 	a.create_layout()
-	print(a)
-	for _ in range(7):
-		a.next_state()
-		print(a)
+
+	main(a)
+	pygame.quit()
