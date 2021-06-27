@@ -5,10 +5,10 @@ import time
 
 
 class Field:
-	def __init__(self, width: int, height: int, filled_spaces: list = []):
+	def __init__(self, width: int, height: int, filled_space_coordinates: list = []):
 		self.width = width
 		self.height = height
-		self.filled_spaces = filled_spaces
+		self.filled_space_coordinates = filled_space_coordinates
 		self.layout = []
 
 
@@ -25,8 +25,10 @@ class Field:
 
 
 	def create_layout(self):
+		filled_spaces = [n[0] + n[1] * self.width for n in self.filled_space_coordinates]
+		print(filled_spaces)
 		for space in range(self.width * self.height):
-			if space in self.filled_spaces:
+			if space in filled_spaces:
 				self.layout.append(1)
 			else:
 				self.layout.append(0)
@@ -128,6 +130,7 @@ class Field:
 
 
 def main(game_field:Field) -> None:
+
 	screen = pygame.display.set_mode((game_field.get_height()*10,game_field.get_width()*10))
 
 
@@ -150,7 +153,7 @@ def main(game_field:Field) -> None:
 
 		pygame.display.flip()
 		game_field.next()
-		time.sleep(0.1)
+		time.sleep(0.09)
 		screen.fill((0,0,0))
 
 
@@ -159,7 +162,7 @@ if __name__ == "__main__":
 	pygame.init()
 	pygame.display.set_caption("Conway's Game of Life")
 
-	a = Field(100,100, [2,100,102,201,202,7980,7981,7982, 702.800,802,901,902])
+	a = Field(100,100, [(2,3), (13,13)])
 	a.create_layout()
 
 	main(a)
